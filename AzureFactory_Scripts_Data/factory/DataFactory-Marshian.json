@@ -1,0 +1,9 @@
+{
+	"name": "DataFactory-Marshian",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "3bd7bce4-34ed-4e64-888a-77bdafa28e0f",
+		"tenantId": "d2b02791-deee-4fce-bc9e-01661bbfaf63"
+	}
+}
