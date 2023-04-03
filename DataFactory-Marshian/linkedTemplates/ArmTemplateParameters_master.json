@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "DataFactory-Marshian"
+		},
+		"AzureSynapseAnalytics1_connectionString": {
+			"value": ""
+		},
+		"ls_adlsnycpayrollgn2storacc_accountKey": {
+			"value": ""
+		},
+		"ls_sqldb_db_nycpayroll_connectionString": {
+			"value": ""
+		},
+		"ls_adlsnycpayrollgn2storacc_properties_typeProperties_url": {
+			"value": "https://adlsnycpayrollgn2storacc.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
