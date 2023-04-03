@@ -1,0 +1,17 @@
+{
+	"name": "Create Emplyee Master Data table",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[NYC_Payroll_EMP_MD](\n    [EmployeeID] [varchar](10) NULL,\n    [LastName] [varchar](20) NULL,\n    [FirstName] [varchar](20) NULL\n) \nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "dedicatedSQLPool_budgetFriendly",
+				"poolName": "dedicatedSQLPool_budgetFriendly"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
