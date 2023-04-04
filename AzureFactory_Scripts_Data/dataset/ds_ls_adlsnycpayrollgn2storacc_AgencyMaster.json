@@ -1,0 +1,33 @@
+{
+	"name": "ds_ls_adlsnycpayrollgn2storacc_AgencyMaster",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adlsnycpayrollgn2storacc",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "AgencyMaster.csv",
+				"folderPath": "dirpayrollfiles",
+				"fileSystem": "payrolldata-container"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "AgencyID",
+				"type": "String"
+			},
+			{
+				"name": "AgencyName",
+				"type": "String"
+			}
+		]
+	}
+}
