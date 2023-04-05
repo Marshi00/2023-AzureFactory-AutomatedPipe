@@ -1,0 +1,152 @@
+{
+	"name": "Pipeline Load All Data into Synapse",
+	"properties": {
+		"description": "Load All the data from SQL DB and Gen 2 Storage to Synapse",
+		"activities": [
+			{
+				"name": "DF NYCPayrollData FROM SQL DB To Synapse",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "DF TitleMaster FROM Gen 2 stor To Synapse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "DF EMPMaster FROM Gen 2 stor To Synapse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF NYCPayrollData FROM SQL DB To Synapse",
+						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adlsnycpayrollgn2storacc",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "payrolldata-container/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adlsnycpayrollgn2storacc",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "payrolldata-container/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "DF EMPMaster FROM Gen 2 stor To Synapse",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF EMPMaster FROM Gen 2 stor To Synapse",
+						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adlsnycpayrollgn2storacc",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "payrolldata-container/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "DF TitleMaster FROM Gen 2 stor To Synapse",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF TitleMaster FROM Gen 2 stor To Synapse",
+						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adlsnycpayrollgn2storacc",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "payrolldata-container/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": []
+	}
+}

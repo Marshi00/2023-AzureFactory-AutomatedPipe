@@ -1,0 +1,40 @@
+{
+	"name": "Pipeline Agency Master Gen 2 to Synapse",
+	"properties": {
+		"description": "Pipeline Agency Maste FROM Gen 2 Storage To Synapse ",
+		"activities": [
+			{
+				"name": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adlsnycpayrollgn2storacc",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "payrolldata-container/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": []
+	}
+}

@@ -1,0 +1,33 @@
+{
+	"name": "Pipeline 2021 payroll Gen 2 to SQLDB",
+	"properties": {
+		"description": "Pipeline NYCPayrollData FROM Gen 2 Storage To SQL DB",
+		"activities": [
+			{
+				"name": "DF NYCPayrollData FROM Gen 2 stor To SQL DB",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF NYCPayrollData FROM Gen 2 stor To SQL DB",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
