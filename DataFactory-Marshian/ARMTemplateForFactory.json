@@ -29,6 +29,459 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline 2021 payroll Gen 2 to SQLDB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline NYCPayrollData FROM Gen 2 Storage To SQL DB",
+				"activities": [
+					{
+						"name": "DF NYCPayrollData FROM Gen 2 stor To SQL DB",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF NYCPayrollData FROM Gen 2 stor To SQL DB",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StoreNYCPayrollData": {},
+									"SQLDBNYCPayrollTable": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF NYCPayrollData FROM Gen 2 stor To SQL DB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline 2021 payroll SQL DB to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline NYCPayrollData FROM SQL DB To Synapse",
+				"activities": [
+					{
+						"name": "DF NYCPayrollData FROM SQL DB To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF NYCPayrollData FROM SQL DB To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SQLDBNYCPayrollTable": {},
+									"SynapseNYCPayrollDataTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF NYCPayrollData FROM SQL DB To Synapse')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline Agency Master Gen 2 to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline Agency Maste FROM Gen 2 Storage To Synapse ",
+				"activities": [
+					{
+						"name": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorAgencyMaster": {},
+									"SynapseNYCPayrollAgencyMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF AgencyMaster FROM Gen 2 stor To Synapse')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline EMP Master Gen 2 to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline EMP Maste FROM Gen 2 Storage To Synapse ",
+				"activities": [
+					{
+						"name": "DF EMPMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF EMPMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorEMPMaster": {},
+									"SynapseNYCPayrollEMPMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF EMPMaster FROM Gen 2 stor To Synapse')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline Load All Data into Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Load All the data from SQL DB and Gen 2 Storage to Synapse",
+				"activities": [
+					{
+						"name": "DF NYCPayrollData FROM SQL DB To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "DF TitleMaster FROM Gen 2 stor To Synapse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DF EMPMaster FROM Gen 2 stor To Synapse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF NYCPayrollData FROM SQL DB To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SQLDBNYCPayrollTable": {},
+									"SynapseNYCPayrollDataTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorAgencyMaster": {},
+									"SynapseNYCPayrollAgencyMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "DF EMPMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF EMPMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorEMPMaster": {},
+									"SynapseNYCPayrollEMPMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "DF TitleMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF TitleMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorTitleMaster": {},
+									"SynapseNYCPayrollTitleMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF NYCPayrollData FROM SQL DB To Synapse')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]",
+				"[concat(variables('factoryId'), '/dataflows/DF AgencyMaster FROM Gen 2 stor To Synapse')]",
+				"[concat(variables('factoryId'), '/dataflows/DF EMPMaster FROM Gen 2 stor To Synapse')]",
+				"[concat(variables('factoryId'), '/dataflows/DF TitleMaster FROM Gen 2 stor To Synapse')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline Title Master Gen 2 to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline Title Maste FROM Gen 2 Storage To Synapse ",
+				"activities": [
+					{
+						"name": "DF TitleMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF TitleMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorTitleMaster": {},
+									"SynapseNYCPayrollTitleMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF TitleMaster FROM Gen 2 stor To Synapse')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_ls_AzureSynapseAnalytics1_NYC_Payroll_AGENCY_MD')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -602,6 +1055,133 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DF AgencyMaster FROM Gen 2 stor To Synapse')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_adlsnycpayrollgn2storacc_AgencyMaster",
+								"type": "DatasetReference"
+							},
+							"name": "Gen2StorAgencyMaster"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_AzureSynapseAnalytics1_NYC_Payroll_AGENCY_MD",
+								"type": "DatasetReference"
+							},
+							"name": "SynapseNYCPayrollAgencyMDTable"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Gen2StorAgencyMaster",
+						"Gen2StorAgencyMaster sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          AgencyID,",
+						"          AgencyName",
+						"     )) ~> SynapseNYCPayrollAgencyMDTable"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_ls_adlsnycpayrollgn2storacc_AgencyMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_ls_AzureSynapseAnalytics1_NYC_Payroll_AGENCY_MD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF EMPMaster FROM Gen 2 stor To Synapse')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_adlsnycpayrollgn2storacc_EmpMaster",
+								"type": "DatasetReference"
+							},
+							"name": "Gen2StorEMPMaster"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_AzureSynapseAnalytics1_NYC_Payroll_EMP_MD",
+								"type": "DatasetReference"
+							},
+							"name": "SynapseNYCPayrollEMPMDTable"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Gen2StorEMPMaster",
+						"Gen2StorEMPMaster sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName",
+						"     )) ~> SynapseNYCPayrollEMPMDTable"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_ls_adlsnycpayrollgn2storacc_EmpMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_ls_AzureSynapseAnalytics1_NYC_Payroll_EMP_MD')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DF NYCPayrollData FROM Gen 2 stor To SQL DB')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -710,6 +1290,182 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_ls_adlsnycpayrollgn2storacc_nycpayroll_2021')]",
 				"[concat(variables('factoryId'), '/datasets/ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF NYCPayrollData FROM SQL DB To Synapse')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data",
+								"type": "DatasetReference"
+							},
+							"name": "SQLDBNYCPayrollTable"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_AzureSynapseAnalytics1_NYC_Payroll_Data",
+								"type": "DatasetReference"
+							},
+							"name": "SynapseNYCPayrollDataTable"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyID as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> SQLDBNYCPayrollTable",
+						"SQLDBNYCPayrollTable sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyID as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          PayrollNumber,",
+						"          AgencyID,",
+						"          AgencyName,",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName,",
+						"          AgencyStartDate,",
+						"          WorkLocationBorough,",
+						"          TitleCode,",
+						"          TitleDescription,",
+						"          LeaveStatusasofJune30,",
+						"          BaseSalary,",
+						"          PayBasis,",
+						"          RegularHours,",
+						"          RegularGrossPaid,",
+						"          OTHours,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     )) ~> SynapseNYCPayrollDataTable"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data')]",
+				"[concat(variables('factoryId'), '/datasets/ds_ls_AzureSynapseAnalytics1_NYC_Payroll_Data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF TitleMaster FROM Gen 2 stor To Synapse')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_adlsnycpayrollgn2storacc_TitleMaster",
+								"type": "DatasetReference"
+							},
+							"name": "Gen2StorTitleMaster"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_ls_AzureSynapseAnalytics1_NYC_Payroll_TITLE_MD",
+								"type": "DatasetReference"
+							},
+							"name": "SynapseNYCPayrollTitleMDTable"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          TitleCode as string,",
+						"          TitleDescription as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Gen2StorTitleMaster",
+						"Gen2StorTitleMaster sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          TitleCode as string,",
+						"          TitleDescription as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          TitleCode,",
+						"          TitleDescription",
+						"     )) ~> SynapseNYCPayrollTitleMDTable"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_ls_adlsnycpayrollgn2storacc_TitleMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_ls_AzureSynapseAnalytics1_NYC_Payroll_TITLE_MD')]"
 			]
 		}
 	]

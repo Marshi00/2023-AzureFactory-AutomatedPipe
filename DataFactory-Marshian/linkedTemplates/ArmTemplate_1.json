@@ -1,0 +1,299 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DataFactory-Marshian"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline EMP Master Gen 2 to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline EMP Maste FROM Gen 2 Storage To Synapse ",
+				"activities": [
+					{
+						"name": "DF EMPMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF EMPMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorEMPMaster": {},
+									"SynapseNYCPayrollEMPMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline Load All Data into Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Load All the data from SQL DB and Gen 2 Storage to Synapse",
+				"activities": [
+					{
+						"name": "DF NYCPayrollData FROM SQL DB To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "DF TitleMaster FROM Gen 2 stor To Synapse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DF EMPMaster FROM Gen 2 stor To Synapse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF NYCPayrollData FROM SQL DB To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SQLDBNYCPayrollTable": {},
+									"SynapseNYCPayrollDataTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorAgencyMaster": {},
+									"SynapseNYCPayrollAgencyMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "DF EMPMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF EMPMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorEMPMaster": {},
+									"SynapseNYCPayrollEMPMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "DF TitleMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF TitleMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorTitleMaster": {},
+									"SynapseNYCPayrollTitleMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline Title Master Gen 2 to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline Title Maste FROM Gen 2 Storage To Synapse ",
+				"activities": [
+					{
+						"name": "DF TitleMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF TitleMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorTitleMaster": {},
+									"SynapseNYCPayrollTitleMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
