@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "Dataflow Aggregate Data",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -17,7 +17,13 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "Dataflow Aggregate Data",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"dataflow_param_fiscalyear": {
+								"value": "@pipeline().parameters.dataflow_param_fiscalyear",
+								"type": "Expression"
+							}
+						}
 					},
 					"staging": {
 						"linkedService": {
@@ -34,6 +40,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"dataflow_param_fiscalyear": {
+				"type": "int"
+			}
+		},
 		"annotations": []
 	}
 }
