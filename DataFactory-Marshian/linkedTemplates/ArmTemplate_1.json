@@ -13,6 +13,156 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline 2021 payroll Gen 2 to SQLDB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline NYCPayrollData FROM Gen 2 Storage To SQL DB",
+				"activities": [
+					{
+						"name": "DF NYCPayrollData FROM Gen 2 stor To SQL DB",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF NYCPayrollData FROM Gen 2 stor To SQL DB",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StoreNYCPayrollData": {},
+									"SQLDBNYCPayrollTable": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline 2021 payroll SQL DB to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline NYCPayrollData FROM SQL DB To Synapse",
+				"activities": [
+					{
+						"name": "DF NYCPayrollData FROM SQL DB To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF NYCPayrollData FROM SQL DB To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SQLDBNYCPayrollTable": {},
+									"SynapseNYCPayrollDataTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline Agency Master Gen 2 to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline Agency Maste FROM Gen 2 Storage To Synapse ",
+				"activities": [
+					{
+						"name": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF AgencyMaster FROM Gen 2 stor To Synapse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Gen2StorAgencyMaster": {},
+									"SynapseNYCPayrollAgencyMDTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Pipeline EMP Master Gen 2 to Synapse')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
