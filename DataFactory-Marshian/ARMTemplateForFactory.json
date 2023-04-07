@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics1'"
 		},
+		"ls_adlsnycpayrollgn2storacPQ_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_adlsnycpayrollgn2storacPQ'"
+		},
 		"ls_adlsnycpayrollgn2storacc_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adlsnycpayrollgn2storacc'"
@@ -183,6 +187,71 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DF AgencyMaster FROM Gen 2 stor To Synapse')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline Aggregated Summary Table to Synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dataflow Aggregate Data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Dataflow Aggregate Data",
+								"type": "DataFlowReference",
+								"parameters": {
+									"dataflow_param_fiscalyear": {
+										"value": "@pipeline().parameters.dataflow_param_fiscalyear",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"SQLDBNYCPayrollTable": {},
+									"Gen2StorHistornycpayroll": {},
+									"SynapseNYCPayrollSummaryTable": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacc",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"dataflow_param_fiscalyear": {
+						"type": "int"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Dataflow Aggregate Data')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]"
 			]
 		},
@@ -410,6 +479,63 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "PQ NYCPayrollData FROM SQL DB To Synapse",
+						"type": "ExecuteWranglingDataflow",
+						"dependsOn": [
+							{
+								"activity": "DF NYCPayrollData FROM SQL DB To Synapse",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "PQ NYCPayrollData FROM SQL DB To Synapse",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data": {},
+									"UserQuerydslsAzureSynapseAnalytics1NYCPayrollData": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adlsnycpayrollgn2storacPQ",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "payrolldata-container/dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"queries": [
+								{
+									"queryName": "UserQuery",
+									"dataflowSinks": [
+										{
+											"name": "UserQuerydslsAzureSynapseAnalytics1NYCPayrollData",
+											"dataset": {
+												"referenceName": "ds_ls_AzureSynapseAnalytics1_NYC_Payroll_Data",
+												"type": "DatasetReference",
+												"parameters": {}
+											},
+											"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tFiscalYear as integer,\n\t\tPayrollNumber as integer,\n\t\tAgencyID as string,\n\t\tAgencyName as string,\n\t\tEmployeeID as string,\n\t\tLastName as string,\n\t\tFirstName as string,\n\t\tAgencyStartDate as date,\n\t\tWorkLocationBorough as string,\n\t\tTitleCode as string,\n\t\tTitleDescription as string,\n\t\tLeaveStatusasofJune30 as string,\n\t\tBaseSalary as double,\n\t\tPayBasis as string,\n\t\tRegularHours as double,\n\t\tRegularGrossPaid as double,\n\t\tOTHours as double,\n\t\tTotalOTPaid as double,\n\t\tTotalOtherPay as double\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> UserQuerydslsAzureSynapseAnalytics1NYCPayrollData"
+										}
+									]
+								}
+							]
+						}
 					}
 				],
 				"policy": {
@@ -423,7 +549,10 @@
 				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacc')]",
 				"[concat(variables('factoryId'), '/dataflows/DF AgencyMaster FROM Gen 2 stor To Synapse')]",
 				"[concat(variables('factoryId'), '/dataflows/DF EMPMaster FROM Gen 2 stor To Synapse')]",
-				"[concat(variables('factoryId'), '/dataflows/DF TitleMaster FROM Gen 2 stor To Synapse')]"
+				"[concat(variables('factoryId'), '/dataflows/DF TitleMaster FROM Gen 2 stor To Synapse')]",
+				"[concat(variables('factoryId'), '/dataflows/PQ NYCPayrollData FROM SQL DB To Synapse')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollgn2storacPQ')]",
+				"[concat(variables('factoryId'), '/datasets/ds_ls_AzureSynapseAnalytics1_NYC_Payroll_Data')]"
 			]
 		},
 		{
@@ -1167,6 +1296,20 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ls_adlsnycpayrollgn2storacPQ')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "PQ",
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_adlsnycpayrollgn2storacPQ_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ls_adlsnycpayrollgn2storacc')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1744,6 +1887,31 @@
 				"[concat(variables('factoryId'), '/datasets/ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data')]",
 				"[concat(variables('factoryId'), '/datasets/ds_ls_adlsnycpayrollgn2storacc_historical_nycpayroll')]",
 				"[concat(variables('factoryId'), '/datasets/ds_ls_AzureSynapseAnalytics1_NYC_Payroll_Summary')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PQ NYCPayrollData FROM SQL DB To Synapse')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "WranglingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"name": "ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data",
+							"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data",
+							"dataset": {
+								"referenceName": "ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data",
+								"type": "DatasetReference"
+							}
+						}
+					],
+					"script": "section Section1;\r\nshared ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data = let AdfDoc = Sql.Database(\"salservermarshian.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data\" in Source;\r\n",
+					"documentLocale": "en-us"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data')]"
 			]
 		}
 	]

@@ -8,6 +8,9 @@
 		"AzureSynapseAnalytics1_connectionString": {
 			"value": ""
 		},
+		"ls_adlsnycpayrollgn2storacPQ_connectionString": {
+			"value": ""
+		},
 		"ls_adlsnycpayrollgn2storacc_accountKey": {
 			"value": ""
 		},

@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics1'"
 		},
+		"ls_adlsnycpayrollgn2storacPQ_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_adlsnycpayrollgn2storacPQ'"
+		},
 		"ls_adlsnycpayrollgn2storacc_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adlsnycpayrollgn2storacc'"
@@ -52,6 +56,9 @@
 					},
 					"AzureSynapseAnalytics1_connectionString": {
 						"value": "[parameters('AzureSynapseAnalytics1_connectionString')]"
+					},
+					"ls_adlsnycpayrollgn2storacPQ_connectionString": {
+						"value": "[parameters('ls_adlsnycpayrollgn2storacPQ_connectionString')]"
 					},
 					"ls_adlsnycpayrollgn2storacc_accountKey": {
 						"value": "[parameters('ls_adlsnycpayrollgn2storacc_accountKey')]"
