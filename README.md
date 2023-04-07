@@ -1,7 +1,7 @@
 # 2023-AzureFactory-AutomatedPipe
 <h1 align="center">
   <br>
-  <img src="images/gg1.jpg"  width="1100">
+  <img src="images/gg2.jpg"  width="1100">
   <br>
   Development Technologies 
   <br>
@@ -10,12 +10,12 @@
 
 
 <p align="center">
-  <img width="75px" hspace="20" src="https://cdn-icons-png.flaticon.com/512/5968/5968350.png"  />
-  <img width="75px" hspace="20" src="https://cdn-icons-png.flaticon.com/512/2369/2369466.png"  />
-  <img width="95px" hspace="20" src="https://user-images.githubusercontent.com/112508169/228011385-252d39e2-18e7-4a4e-aa49-9f42632081c7.png" />
-  <img width="95px" hspace="20" src="https://cdn.wccftech.com/wp-content/uploads/2016/05/Azure_.png" />
-  <img width="95px" hspace="20" src="https://spark.apache.org/images/spark-logo-trademark.png" />
-
+  <img width="75px" hspace="20" src="images/Data-Factory.svg"  />
+  <img width="75px" hspace="20" src="images/SQL-Database.svg"  />
+  <img width="75px" hspace="20" src="images/Azure-Synapse-Analytics.svg" />
+  <img width="75px" hspace="20" src="https://cdn.wccftech.com/wp-content/uploads/2016/05/Azure_.png" />
+  <img width="150px" hspace="20" src="https://miro.medium.com/max/1078/1*IQ4oFJQaQJGgHS-h0M1fxw.png" />
+  <img width="75px" hspace="20" src="images/SQL-Data-Warehouses.svg" />
 
  
   
@@ -31,31 +31,42 @@
 </p>
 
 ## Purpose
-The goal of this project is to develop a Delta Lake solution using Azure Databricks.
+The goal of this project is to develop a Automated Pipeline solution using Azure Data Factory
+<br>.
 Bussiness Requirements :
-* Time-sensitive reports for trips
-* Time-sensitive reports for payments
-* Analytics per individuals and age groups
-* Analytics per individual trips and payments 
+* Analyzing how the City's financial resources are allocated and how much of the City's budget is being devoted to overtime.
+* Making the data available to the interested public to show how the City’s budget is being spent on salary and overtime pay for all municipal employees.
+* Analytics per year groups
+* Analytics per Agency & payments 
 
 > **Note**
 > Resources related to each step are divided into their respective folders.
 
 ## CodeFlow
 
-Step 0: Load CSV Archive File to Azure Databricks HBFS
-In this step, the initial data is loaded into Azure Databricks, which is a cloud-based big data processing platform. Specifically, the CSV archive file is loaded into the Hadoop File System (HBFS), which is a distributed file system designed to store large data sets across multiple nodes. This step is necessary to provide a centralized location for the data to be stored and accessed by subsequent processing steps.
+Step 0: Create and Configure Azure Resources <br>
+* Create and configure Azure Data Factory and Synapse Analytics services
+* Link the Azure Data Factory and Synapse Analytics services together
+* Set up Gen 2 Storage account and create the required directories (Historical, Staging, Files)
 
-Step 1: Bronze Step - Load CSV Files into HBFS and Save as Delta Files
-The next step is to load the raw CSV files into HBFS and save them as Delta files. Delta is a file format that supports ACID transactions and allows for efficient processing of large data sets. By saving the raw data as Delta files, we create a "Bronze" layer that serves as a raw data store that can be accessed by subsequent processing steps. This step also involves cleaning and transforming the data as necessary to prepare it for further processing.
+Step 1: Load CSV Archive File to Gen 2 Storage <br>
+* Load the extracted data to the corresponding directories in Gen 2 Storage (Historical, Staging, Files)
 
-Step 2: Silver Step - Clean, Manipulate, and Deduplicate Data
-The Silver step involves processing the data in the Bronze layer and transforming it into a format that is more suitable for analysis. This may involve tasks such as cleaning the data, manipulating it to derive new fields, and dropping duplicate records. The resulting data is then saved as Delta files in a "Silver" layer, which serves as an intermediate data store that can be accessed by subsequent processing steps.
+Step 2: Load Current Year Data to SQL DB
 
-Step 3: Gold Step - Design and Load Star Schema
-The final step is to design and load a Star schema based on the business requirements and optimization for operation. The Star schema is a relational schema that organizes data into fact and dimension tables for efficient querying and analysis. In this step, we will use the data in the Silver layer to design the Star schema and then load the resulting data into a "Gold" layer that serves as the final data store for analysis. This step also involves optimizing the schema for query performance and indexing the data as necessary.
+* Build and configure the required pipelines in Azure Data Factory to extract the current year data from the CSV archive file at Gen 2 Storage
+* Load the current year data into a SQL database using Synapse Analytics
 
-Overall, this process involves progressively refining and transforming the data as it moves from the raw data store to the final data store, resulting in a well-organized and optimized data set that can be efficiently analyzed and queried.
+Step 3: Load Current Year Data and Other Data into Respective Synapse Tables <br>
+
+* Build and configure the required data sets, data flows, and pipelines in Azure Data Factory to extract and transform data from the SQL database and other data from Gen 2 sources
+* Load the transformed data into their respective Synapse tables in Azure Synapse Analytics
+
+Step 4: Aggregate Data and Transform it in Data Flow <br>
+
+* Build a data flow to aggregate data according to the business requirements
+* Transform the data in the data flow using appropriate parameters
+* Send the transformed data to the respective Synapse table
 
 
 
@@ -65,28 +76,29 @@ Overall, this process involves progressively refining and transforming the data 
 * To install and set up the project, please follow these steps:
 
 1-Clone the repository from GitHub.<br>
-2-Set up an Azure account and create an Azure Data Factory instance.<br>
-3-Create a Delta Lake table in Azure Databricks.<br>
-4-Load the CSV archive file to the HBFS in Azure Databricks.<br>
-5-Use Delta Lake to convert the CSV files in the HBFS to Delta files.<br>
-6-Clean and manipulate the Delta files in Azure Databricks and save them to Silver tables.<br>
-7-Design a star schema based on business requirements and optimization for operation.<br>
-8-Use SQL scripts to transform the Silver tables into the final star schema designed in Step 7 and save them in Gold tables.<br>
+2-Set up an Azure account and create an Azure Data Factory, Synapse, Gen2 Storage and SQL DB instance.<br>
+3-Create the appropriate directories in the Gen2 Storage (Staging, Historical, and Current).<br>
+4-Load the CSV archive file to Gen2 Storage.<br>
+5-Use Data Factory to move the current year data to SQL DB.<br>
+6-Design an aggregated flow as per business requirements.<br>
+7-Design an aggregated flow as per business requirements.<br>
+8-Automate the flow using the appropriate parameters and transformations.<br>
 
 
 The key features and functionality of this project include:
 
-* Ingesting data from CSV files into Delta Lake.
-* Cleaning and manipulating data to prepare it for analysis.
-* Designing a star schema to support analytics.
-* Transforming data from Silver tables into the final star schema in Gold tables.
+* Automated Pipeline Solution: The project provides an automated pipeline solution using Azure Data Factory to extract, transform and load data from various sources into Azure Synapse Analytics for further analysis.
+* Business Requirements: The project addresses the business requirements related to analyzing the City's financial resources, making data available to the public, and performing analytics per year groups and per agency & payments.
+* Modularized Resource Organization: The project has organized resources related to each step into their respective folders, making it easier for users to locate and manage the required resources.
+* Use of Azure Services: The project utilizes various Azure services such as Azure Data Factory, Synapse Analytics, Gen2 Storage, and SQL DB to efficiently handle the data pipeline solution.
+
 
 > **Note**
-> Follow each step and requirments.txt.
+> Please make sure to follow the steps in order and ensure that all the required resources are set up and configured properly before proceeding with each step.
  
 
 ## Credit
-Matt Swaffer : (https://www.linkedin.com/in/maswaffer/)
+Matt Swaffer : (https://www.linkedin.com/in/luckypamula/)
 <br>
 Udacity : (https://www.udacity.com/course/data-engineering-with-microsoft-azure-nanodegree--nd0277)
 <p></p>
