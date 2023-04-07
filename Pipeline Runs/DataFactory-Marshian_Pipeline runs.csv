@@ -1,0 +1,7 @@
+"Pipeline name","Run start","Run end","Duration","Triggered by","Status","Error","Run","Parameters","Annotations","Run ID"
+"Pipeline Aggregated Summary Table to Synapse","4/7/2023, 11:31:27 AM","4/7/2023, 11:35:34 AM","00:04:06","Manual trigger","Succeeded","","Original","{""dataflow_param_fiscalyear"":""2019""}","[]","eabfacc4-c68e-4b17-89f1-f40906f249aa"
+"Pipeline 2021 payroll SQL DB to Synapse","4/7/2023, 11:26:32 AM","4/7/2023, 11:30:39 AM","00:04:07","Manual trigger","Succeeded","","Original","","[]","55ab3a6c-2a6b-4699-9113-541ffcee50bb"
+"Pipeline Title Master Gen 2 to Synapse","4/7/2023, 11:21:04 AM","4/7/2023, 11:25:07 AM","00:04:02","Manual trigger","Succeeded","","Original","","[]","86ab2af4-b6f1-427b-aa65-c0ec4cc21133"
+"Pipeline EMP Master Gen 2 to Synapse","4/7/2023, 11:20:55 AM","4/7/2023, 11:24:54 AM","00:03:59","Manual trigger","Succeeded","","Original","","[]","f110752f-fdb0-40e6-b164-56862e06d744"
+"Pipeline Agency Master Gen 2 to Synapse","4/7/2023, 11:20:40 AM","4/7/2023, 11:24:43 AM","00:04:03","Manual trigger","Succeeded","","Original","","[]","f853ad5c-dbd7-48ce-a20a-2ff777e9d40f"
+"Pipeline 2021 payroll Gen 2 to SQLDB","4/7/2023, 11:20:05 AM","4/7/2023, 11:24:07 AM","00:04:02","Manual trigger","Succeeded","","Original","","[]","63e5da29-fd96-4766-b132-11277c40b3f9"
