@@ -145,6 +145,44 @@
 					},
 					"traceLevel": "Fine"
 				}
+			},
+			{
+				"name": "PQ NYCPayrollData FROM SQL DB To Synapse",
+				"type": "ExecuteWranglingDataflow",
+				"dependsOn": [
+					{
+						"activity": "DF NYCPayrollData FROM SQL DB To Synapse",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "PQ NYCPayrollData FROM SQL DB To Synapse",
+						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adlsnycpayrollgn2storacPQ",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "payrolldata-container/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"queries": []
+				}
 			}
 		],
 		"annotations": []

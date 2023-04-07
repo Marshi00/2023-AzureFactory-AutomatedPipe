@@ -1,0 +1,20 @@
+{
+	"name": "PQ NYCPayrollData FROM SQL DB To Synapse",
+	"properties": {
+		"type": "WranglingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~>  ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data",
+					"dataset": {
+						"referenceName": "ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data",
+						"type": "DatasetReference"
+					}
+				}
+			],
+			"script": "section Section1;\r\nshared ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data = let AdfDoc = Sql.Database(\"salservermarshian.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_ls_sqldb_db_nycpayroll_NYC_Payroll_Data\" in Source;\r\n",
+			"documentLocale": "en-us"
+		}
+	}
+}
