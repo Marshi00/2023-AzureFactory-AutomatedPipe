@@ -98,7 +98,7 @@ The key features and functionality of this project include:
  
 
 ## Credit
-Matt Swaffer : (https://www.linkedin.com/in/luckypamula/)
+Lucky (Vishnu) Pamula : (https://www.linkedin.com/in/luckypamula/)
 <br>
 Udacity : (https://www.udacity.com/course/data-engineering-with-microsoft-azure-nanodegree--nd0277)
 <p></p>
