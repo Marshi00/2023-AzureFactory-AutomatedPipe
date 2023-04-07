@@ -372,7 +372,8 @@
 				},
 				"parameters": {
 					"dataflow_param_fiscalyear": {
-						"type": "int"
+						"type": "int",
+						"defaultValue": 2019
 					}
 				},
 				"annotations": []
