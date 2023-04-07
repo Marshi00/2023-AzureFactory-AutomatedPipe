@@ -39,7 +39,7 @@
 					"name": "TotalPaid"
 				},
 				{
-					"name": "aggregate1"
+					"name": "Groupedby"
 				}
 			],
 			"scriptLines": [
@@ -98,9 +98,10 @@
 				"SQLDBNYCPayrollTable, Gen2StorHistornycpayroll union(byName: true)~> union1",
 				"union1 filter(toInteger(FiscalYear) >= $dataflow_param_fiscalyear) ~> Filter1FiscalYearlevelParameter",
 				"Filter1FiscalYearlevelParameter derive(TotalPaid = RegularGrossPaid + TotalOTPaid+TotalOtherPay) ~> TotalPaid",
-				"TotalPaid aggregate(groupBy(FiscalYear,",
-				"          AgencyName)) ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"TotalPaid aggregate(groupBy(AgencyName,",
+				"          FiscalYear),",
+				"     TotalPaid = sum(TotalPaid)) ~> Groupedby",
+				"Groupedby sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          FiscalYear as integer,",
@@ -119,7 +120,8 @@
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
 				"          FiscalYear,",
-				"          AgencyName",
+				"          AgencyName,",
+				"          TotalPaid",
 				"     )) ~> SynapseNYCPayrollSummaryTable"
 			]
 		}
